@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: http-logger
+  labels:
+    app: http-logger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: http-logger
+  template:
+    metadata:
+      labels:
+        app: http-logger
+    spec:
+      containers:
+      - name: http-logger
+        image: quay.io/bryonbaker/http-logger:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9001
+          protocol: TCP
+        args:
+        - "--port"
+        - "9001"          # Overriding the default port from 9000 to 9001
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: http-logger-service
+  labels:
+    app: http-logger
+spec:
+  selector:
+    app: http-logger
+  ports:
+  - protocol: TCP
+    port: 9000
+    targetPort: 9001
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: http-logger-route
+  labels:
+    app: http-logger
+spec:
+  path: /
+  to:
+    kind: Service
+    name: http-logger-service
+    weight: 100
+  port:
+    targetPort: 9001
+  wildcardPolicy: None
