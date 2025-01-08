@@ -1,0 +1,44 @@
+apiVersion: observability.openshift.io/v1
+kind: ClusterLogForwarder
+metadata:
+  name: filtered-app-logging
+  namespace: http-logger
+spec:
+  managementState: Managed
+  # inputs:
+  #   - name: mylogs
+  #     application:
+  #       includes:
+  #         - namespace: "sleeper"
+  #     type: application
+  outputs:
+    - lokiStack:
+        authentication:
+          token:
+            from: serviceAccount
+        target: # This is the name of the Loki Stack installed via the Operator
+          name: logging-loki
+      http:
+        url: 'http://http-logger-route-http-logger.apps.sno.bakerapps.net/'
+        method: POST
+      tls:
+        ca:
+          configMapName: openshift-service-ca.crt
+          key: service-ca.crt
+      name: logging-http
+      type: http
+  # filters:
+  #   - name: monitor-namespace
+  #     type: drop
+  #     drop:
+  #     - test:
+  #       - field: .kubernetes.namespace_name
+  #         notMatches: "foobar"
+  pipelines:
+    - inputRefs:
+        - application
+      outputRefs:
+        - logging-http
+      name: app-logs-pipeline
+  serviceAccount:
+    name: http-log-collector-sa
