@@ -33,7 +33,7 @@ spec:
   #     drop:
   #     - test:
   #       - field: .kubernetes.namespace_name
-  #         notMatches: "foobar"
+  #         notMatches: "sleeper"
   pipelines:
     - inputRefs:
         - application
