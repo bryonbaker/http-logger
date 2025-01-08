@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: http-logger
+  namespace: http-logger
   labels:
     app: http-logger
 spec:
@@ -16,7 +17,7 @@ spec:
     spec:
       containers:
       - name: http-logger
-        image: quay.io/bryonbaker/http-logger:latest
+        image: quay.io/bryonbaker/http-logger:v1
         imagePullPolicy: Always
         ports:
         - containerPort: 9001
@@ -31,6 +32,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: http-logger-service
+  namespace: http-logger
   labels:
     app: http-logger
 spec:
@@ -45,6 +47,7 @@ kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
   name: http-logger-route
+  namespace: http-logger
   labels:
     app: http-logger
 spec:

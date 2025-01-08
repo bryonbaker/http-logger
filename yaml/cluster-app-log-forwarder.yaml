@@ -1,0 +1,31 @@
+apiVersion: observability.openshift.io/v1
+kind: ClusterLogForwarder
+metadata:
+  name: app-audit-logging
+  namespace: http-logger
+spec:
+  managementState: Managed
+  outputs:
+    - lokiStack:
+        authentication:
+          token:
+            from: serviceAccount
+        target:
+          name: logging-loki
+      http:
+        url: 'http://http-logger-route-http-logger.apps.sno.bakerapps.net/'
+        method: POST
+      tls:
+        ca:
+          configMapName: openshift-service-ca.crt
+          key: service-ca.crt
+      name: logging-http
+      type: http
+  pipelines:
+    - inputRefs:
+        - application
+      outputRefs:
+        - logging-http
+      name: app-logs-pipeline
+  serviceAccount:
+    name: http-log-collector-sa

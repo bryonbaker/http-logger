@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: http-log-collector-sa
+  namespace: http-logger
+  annotations:
+    bakerapps.net/comment: "Service account for for the demo"
