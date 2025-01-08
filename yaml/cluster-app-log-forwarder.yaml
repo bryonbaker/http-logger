@@ -1,7 +1,7 @@
 apiVersion: observability.openshift.io/v1
 kind: ClusterLogForwarder
 metadata:
-  name: app-audit-logging
+  name: app-logging
   namespace: http-logger
 spec:
   managementState: Managed
@@ -10,7 +10,7 @@ spec:
         authentication:
           token:
             from: serviceAccount
-        target:
+        target: # This is the name of the Loki Stack installed via the Operator
           name: logging-loki
       http:
         url: 'http://http-logger-route-http-logger.apps.sno.bakerapps.net/'
