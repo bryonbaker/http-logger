@@ -1,13 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
-	"time"
 )
 
 func main() {
@@ -23,7 +23,7 @@ func main() {
 	// Define the HTTP handler
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// Capture the current timestamp in RFC3339 format
-		timestamp := time.Now().UTC().Format(time.RFC3339)
+		// timestamp := time.Now().UTC().Format(time.RFC3339)
 
 		// Read the request body
 		body, err := ioutil.ReadAll(r.Body)
@@ -38,8 +38,16 @@ func main() {
 		// Convert body to string
 		bodyStr := string(body)
 
-		// Log the required information to stdout
-		fmt.Printf("%s: %s: %s\n", timestamp, r.Method, bodyStr)
+		// Marshal only the body into JSON
+		bodyJSON, err := json.Marshal(bodyStr)
+		if err != nil {
+			log.Printf("Error marshalling body: %v\n", err)
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		// Output the JSON body on a new line
+		fmt.Printf("%s\n", bodyJSON)
 
 		// Respond with 200 OK and empty body
 		w.WriteHeader(http.StatusOK)
@@ -53,4 +61,3 @@ func main() {
 		os.Exit(1)
 	}
 }
-
