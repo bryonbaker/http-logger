@@ -37,6 +37,8 @@ spec:
   pipelines:
     - inputRefs:
         - mylogs
+#      filterRefs:
+#        - monitor-namespace
       outputRefs:
         - logging-http
       name: app-logs-pipeline
