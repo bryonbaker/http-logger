@@ -5,12 +5,12 @@ metadata:
   namespace: http-logger
 spec:
   managementState: Managed
-  # inputs:
-  #   - name: mylogs
-  #     application:
-  #       includes:
-  #         - namespace: "sleeper"
-  #     type: application
+  inputs:
+    - name: mylogs
+      application:
+        includes:
+          - namespace: "sleeper"
+      type: application
   outputs:
     - lokiStack:
         authentication:
@@ -36,7 +36,7 @@ spec:
   #         notMatches: "sleeper"
   pipelines:
     - inputRefs:
-        - application
+        - mylogs
       outputRefs:
         - logging-http
       name: app-logs-pipeline
