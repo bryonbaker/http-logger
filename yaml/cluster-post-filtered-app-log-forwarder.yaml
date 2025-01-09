@@ -5,12 +5,12 @@ metadata:
   namespace: http-logger
 spec:
   managementState: Managed
-  inputs:
-    - name: mylogs
-      application:
-        includes:
-          - namespace: "sleeper"
-      type: application
+  # inputs:
+  #   - name: mylogs
+  #     application:
+  #       includes:
+  #         - namespace: "sleeper"
+  #     type: application
   outputs:
     - lokiStack:
         authentication:
@@ -36,9 +36,9 @@ spec:
           notMatches: "sleeper"
   pipelines:
     - inputRefs:
-        - mylogs
-#      filterRefs:
-#        - monitor-namespace
+       - application    # application, audit, and infra are three default values for .spec.inputs so you don't need to specify .spec.inputs.
+      filterRefs:
+       - monitor-namespace
       outputRefs:
         - logging-http
       name: app-logs-pipeline
